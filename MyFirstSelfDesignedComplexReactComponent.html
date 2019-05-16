@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> React Transportation</title>
+        <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+        <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+
+    </head>
+
+    <body>
+        <div id="root"></div>
+        <script type=text/babel>
+
+        class XCounter extends React.Component{
+            constructor(props){
+                //console.log("constructor begins")
+                super(props)
+                this.state = {value:0}
+                this.incrementHandler = this.incrementHandler.bind(this)
+                this.decrementHandler = this.decrementHandler.bind(this)
+                //console.log("constructor ends")
+            }
+            incrementHandler(){
+                //console.log("increment fired")
+                this.setState((prevState, props)=>{
+                    return {value: prevState.value + 1}
+                },()=>
+                this.props.action(this.props.id, this.state.value)
+                );
+                //console.log("this value is: ",this.state.value)
+            }
+
+            decrementHandler(){
+                //console.log("decrement fired")
+                this.setState((prevState, props)=>{
+                    return {value: prevState.value - 1}
+                },()=>
+                    this.props.action(this.props.id, this.state.value)
+                );
+                //console.log("the value is: ",this.state.value)
+            }
+
+            render(){
+                //console.log("rendering")
+                return(
+
+                <div>
+                    <button onClick={this.incrementHandler}>+</button>
+                    <p>{this.state.value}</p>
+                    <button onClick={this.decrementHandler}>-</button>
+                </div>
+            );
+
+            }
+        }
+
+        class YCounter extends React.Component{
+            constructor(props){
+                //console.log("constructor begins")
+                super(props)
+                this.state = {value:0}
+                this.incrementHandler = this.incrementHandler.bind(this)
+                this.decrementHandler = this.decrementHandler.bind(this)
+                //console.log("constructor ends")
+            }
+
+            incrementHandler(){
+                //console.log("increment fired")
+                this.setState((prevState, props)=>{
+                    return {value: prevState.value + 5}
+                }, ()=>
+                this.props.action(this.props.id, this.state.value)
+            );
+                //console.log("increment done")
+            }
+
+            decrementHandler(){
+                //console.log("decrement fired")
+                this.setState((prevState, props)=>{
+                    return {value: prevState.value - 5}
+                },()=>
+                this.props.action(this.props.id, this.state.value)
+            );
+                //console.log("decrement done")
+            }
+            render(){
+                //console.log("rendering")
+                return(
+
+                <div>
+                    <button onClick={this.incrementHandler}>+</button>
+                    <p>{this.state.value}</p>
+                    <button onClick={this.decrementHandler}>-</button>
+                </div>
+            );
+
+            }
+        }
+
+        class Coef extends React.Component{
+            constructor(props){
+                super(props)
+                this.state = {value:0}
+                this.handleChange = this.handleChange.bind(this)
+            }
+            handleChange(e){
+                this.setState({value:e.target.value}, ()=>
+                //console.log(this.state.value));
+                this.props.action(this.props.id, this.state.value));
+            }
+
+            render(){
+                return(
+
+                    <form onSubmit={this.handleChange}>
+                       <label>
+                         Pick a Coefficient:
+                         <select value={this.state.value} onChange={this.handleChange}>
+                           <option value={10}>10</option>
+                           <option value={20}>20</option>
+                           <option value={30}>30</option>
+                           <option value={40}>40</option>
+                         </select>
+                       </label>
+                     </form>
+
+                );
+            }
+        }
+
+        class OutputField extends React.Component {
+          render() {
+             return(
+              <div>The product is {this.props.product}</div>
+             );
+          }
+        }
+
+
+        class Calculator extends React.Component{
+            constructor(props){
+                super(props)
+                this.state={XCounter:0,YCounter:0,Coef:0, result:0}
+                this.calculation=this.calculation.bind(this)
+            }
+
+            calculation(id,val){
+                if(id ==1){
+                    this.setState({XCounter:val, result: Number(this.state.Coef)*(Number(val)+Number(this.state.YCounter))})
+                }
+                else if(id ==2){
+                    this.setState({YCounter:val, result: Number(this.state.Coef)*(Number(val)+Number(this.state.XCounter))})
+                }
+                else if(id ==3){
+                    this.setState({Coef:val, result: Number(val)*(Number(this.state.XCounter)+Number(this.state.YCounter))})
+                }
+
+            }
+            render(){
+                return(
+                    <div>
+                        <XCounter id="1" action={this.calculation}/>
+                        <YCounter id="2" action={this.calculation}/>
+                        <Coef id="3" action={this.calculation}/>
+                        <OutputField product={this.state.result}/>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(
+            <Calculator  />,
+            document.getElementById("root")
+        )
+
+        </script>
+    </body>
+</html>
