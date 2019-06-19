@@ -16,7 +16,8 @@ async function csvParser(filename){
     })
     const jsonArray = await csv().fromFile(filePath)
     //console.log(jsonArray)
-    let result = JSON.stringify(jsonArray)
+    let result = JSON.stringify(jsonArray, null, 2)
+    //console.log(result)
 
     fs.writeFile(jsonfileName,result, (error)=>{
         if(error) return console.error(error)
@@ -25,3 +26,4 @@ async function csvParser(filename){
 }
 
 csvParser(process.argv[2])
+
